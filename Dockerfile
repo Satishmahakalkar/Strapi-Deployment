@@ -1,27 +1,24 @@
-# Use the official Node.js image from DockerHub
-FROM node:16
+# Base image
+FROM node:18-alpine
 
-# Set the working directory inside the container
-WORKDIR /usr/src/app
+# Set working directory
+WORKDIR /app
 
-# Copy only package.json and package-lock.json to leverage Docker cache better
-COPY package*.json ./
+# Copy package files
+COPY package.json ./
+COPY package-lock.json ./
 
-# Set environment variable for production
-ENV NODE_ENV=production
+# Install dependencies
+RUN npm install
 
-# Install dependencies only for production environment
-RUN npm install --production
-
-# Copy the rest of the Strapi project
+# Copy all source files
 COPY . .
 
-# Expose port 1337 (Strapi default port)
+# Expose Strapi's default port
 EXPOSE 1337
 
-# Run Strapi when the container starts
-CMD ["npm", "run", "develop"]
+# Build admin panel (optional if already built)
+RUN npm run build
 
-# Clean up unnecessary files (for production setup)
-RUN npm prune --production
-
+# Start Strapi in production mode
+CMD ["npm", "run", "start"]
