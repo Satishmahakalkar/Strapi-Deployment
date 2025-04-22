@@ -14,13 +14,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # List contents for debugging
+      # Debug: List repository contents
       - name: List repository contents
         run: ls -R
 
-      # Set up Docker Buildx (optional if not needed)
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      # Debug: Print current working directory
+      - name: Print current working directory
+        run: pwd
 
       # Log in to Docker Hub
       - name: Log in to Docker Hub
@@ -39,7 +39,7 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/strapi-app:${{ github.sha }}
 
-      # Set image tag as output (updated for GitHub Actions deprecation)
+      # Set image tag as output
       - name: Set image tag as output
         id: image_tag
         run: echo "image_tag=${{ github.sha }}" >> $GITHUB_ENV
