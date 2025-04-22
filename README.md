@@ -1,42 +1,23 @@
-# getstarted
+# Strapi Deployment with GitHub Actions and Terraform
 
-This is an example app you can run to test your changes quickly.
+This repository contains the automation for deploying Strapi on AWS EC2 using Docker, GitHub Actions for CI/CD, and Terraform for infrastructure deployment.
+
+## Setup
+
+1. Push code to the `main` branch to trigger CI.
+2. Manually trigger the Terraform pipeline from GitHub Actions to deploy Strapi on EC2.
+
+## Files
+
+- `ci.yml`: GitHub Actions CI pipeline for Docker build and push.
+- `terraform.yml`: GitHub Actions pipeline for Terraform deployment.
+- `main.tf`: Terraform configuration for EC2 and Docker deployment.
+
+## Deployment
+
+Once the Docker image is built and pushed, Terraform will deploy it to an EC2 instance.
 
 ## Requirements
 
-- Docker
-- Docker compose
-- Node
-
-## Installation
-
-By default once you have setup the monorepo you will be able to run the getstarted app with a sqlite DB directly.
-
-If you wish to run the getstarted app with another database you can use the `docker-compose.dev.yml` file at the root of the directory.
-
-### start the databases
-
-Run the following command at the root of the monorepo
-
-```
-docker-compose -f docker-compose.dev.yml up -d
-```
-
-If you need to stop the running databases you can stop them with the following command:
-
-```
-docker-compose -f docker-compose.dev.yml stop
-```
-
-### run the getstarted app with a specific database
-
-```
-DB={dbName} yarn develop
-```
-
-The way it works is that the `getstarted` app has a specific `database.js` config file that will use the `DB` environment variable to setup the right database connection. You can look at the code [here](./config/database.js)
-
-**Warning**
-
-You might have some errors while connecting to the databases.
-They might be coming from a conflict between a locally running database instance and the docker instance. To avoid the errors either shutdown your local database instance or change the ports in the `./config/database.js` and the `docker-compose.dev.yml` file.
+- AWS credentials (set in GitHub Secrets)
+- Docker Hub credentials (set in GitHub Secrets)
