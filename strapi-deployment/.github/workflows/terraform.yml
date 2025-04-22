@@ -1,0 +1,39 @@
+name: CD - Terraform Deploy
+
+on:
+  workflow_dispatch:  # This allows manual triggering of the workflow
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Terraform
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      # Set up AWS credentials
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Your AWS Access Key ID
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Your AWS Secret Access Key
+          region: us-east-1  # Specify your AWS region
+
+      # Initialize Terraform
+      - name: Terraform Init
+        run: terraform init
+
+      # Run Terraform Plan
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      # Apply Terraform Plan (auto-approve)
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+        env:
+          IMAGE_TAG: ${{ steps.set_image_tag.outputs.image_tag }}  # Use image tag from CI pipeline
