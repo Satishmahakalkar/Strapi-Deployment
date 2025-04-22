@@ -4,11 +4,14 @@ FROM node:16
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json
+# Copy only package.json and package-lock.json to leverage Docker cache better
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Set environment variable for production
+ENV NODE_ENV=production
+
+# Install dependencies only for production environment
+RUN npm install --production
 
 # Copy the rest of the Strapi project
 COPY . .
@@ -18,3 +21,7 @@ EXPOSE 1337
 
 # Run Strapi when the container starts
 CMD ["npm", "run", "develop"]
+
+# Clean up unnecessary files (for production setup)
+RUN npm prune --production
+
