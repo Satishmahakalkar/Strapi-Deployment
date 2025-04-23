@@ -13,12 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: List repository contents
-        run: ls -R
-
-      - name: Print current working directory
-        run: pwd
-
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -27,7 +21,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/strapi-app:${{ github.sha }} ./strapi/examples/getstarted
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/strapi-app:${{ github.sha }} ./examples/getstarted
 
       - name: Push Docker image
         run: |
